@@ -1,0 +1,15 @@
+<!-- app/templates/app/dishes_list.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dishes List</title>
+  </head>
+  <body>
+    <h1>Dishes List</h1>
+    <ul>
+      {% for dish in dishes %}
+      <li>{{ dish.Description }} - {{ dish.Recipe }}</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
