@@ -193,12 +193,12 @@ class UserActionAchievements(models.Model):
     day = models.CharField(max_length=255, default="")
     action = models.CharField(max_length=255, default="")
     reason = models.CharField(max_length=255, default="", null=True)
-    points = models.IntegerField(default=0, null=True) 
+    points = models.IntegerField(default=0, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f"{self.user.username} - action: {self.action} - reason: {self.reason} - points: {self.points}"
-    
+
 class UserAchievements(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
@@ -211,6 +211,3 @@ class UserAchievements(models.Model):
         f"{self.user.username} - level: {self.level} - points: {self.points} - "
         f"badges: {len(self.badges)} - trails: {len(self.trails)}"
     )
-
-
-

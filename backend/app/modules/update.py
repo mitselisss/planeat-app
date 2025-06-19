@@ -4,7 +4,6 @@ from datetime import date, timedelta
 import itertools
 import random
 import time
-import json
 #import numpy as np
 #from django.db.models import Q
 from django.contrib.auth.models import User
@@ -12,6 +11,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from ..models import Meal, UserProfile, NP, NPItem
 from .nps import _filtering, _get_five_meals, _process, daily_dataframe_transform, weekly_dataframe_transform, print_best_week
+import json
 
 
 def calculate_characteristics(sex, age, height, weight, pal, target_weight, goal, target_goal):
@@ -141,6 +141,7 @@ def update_user_profile(request, user_id):
 
     return JsonResponse({'message': 'User profile sccesfully updated.'}, status=200)
 
+
 @api_view(['PUT'])
 def update_user_main_screen(request, user_id):
     print("MPHKAA")
@@ -164,6 +165,7 @@ def update_user_main_screen(request, user_id):
     user_profile.save()
 
     return JsonResponse({'message': 'Main screen sccesfully updated.'}, status=200)
+
 
 
 @api_view(['PUT'])

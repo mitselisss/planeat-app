@@ -15,6 +15,7 @@ from datetime import date
 pd.options.display.float_format = '{:.3f}'.format
 np.set_printoptions(suppress=True, formatter={'all': lambda x: f'{x:.6f}'})
 
+
 def print_results(daily: List, daily_targets, weekly: List, weekly_targets, weights):
     def flatten_plans(plans):
         rows = []
@@ -40,6 +41,7 @@ def print_results(daily: List, daily_targets, weekly: List, weekly_targets, weig
     print("\n--- WEEKLY PLANS ANALYSIS ---")
     print(df_weekly.head(10))
 
+
 def return_best_plan(user_settings):
     daily_gen = DailyMealPlanGenerator(user_settings)
     daily_plans = daily_gen.process()
@@ -57,8 +59,8 @@ def return_best_plan(user_settings):
 
     best_plan, divercity_depth = Divercity(weekly_plans).process()
 
+    # Commend the two lines bolow if you want to run the command for virtual users' testing or uncomment them to run in the backend.
     print_results(daily_plans, daily_targets, weekly_plans, weekly_targets, daily_gen.NUTRITION_WEIGHTS)
-
     return best_plan # Commend this line if you want to run the command for virtual users' testing.
 
     return get_best_meal(
@@ -71,6 +73,7 @@ def return_best_plan(user_settings):
         user_settings['sex'],
         user_settings['preference'],
         user_settings['allergy']), 0
+
 
 def get_best_meal(aa, daily_plans, best_plan, daily_targets, weekly_targets, divercity_depth, sex, preference, allergy):
     row = {
@@ -87,6 +90,8 @@ def get_best_meal(aa, daily_plans, best_plan, daily_targets, weekly_targets, div
             row[f"day_{i+1}_{nutrient}"] = value
         for key, value in daily_targets.items():
             row[f'day_{i+1}_{key}_target'] = value
+        row[f'day_{i+1}_DNSP'] = dnp['DNPS']
+        row[f'day_{i+1}_NDNSP'] = dnp['NDNPS']
 
     for nutrient, value in best_plan['nutrition'].items():
         row[f'week_{nutrient}'] = value
@@ -96,6 +101,7 @@ def get_best_meal(aa, daily_plans, best_plan, daily_targets, weekly_targets, div
     row[f"NDNPS"] = best_plan['NDNPS']
 
     return row
+
 
 class BaseFunctions:
     def __init__(self, user_settings: Dict, is_daily=False):
@@ -147,25 +153,25 @@ class BaseFunctions:
                 'nns_q': current*30/base,
             }
             self.NUTRITION_WEIGHTS = {
-                'Total_Energy': 0.4,
-                'Total_Protein': 0.12,
-                'Total_Fat': 0.06,
-                'Total_Carbs': 0.06,
-                'Total_Fibre': 0.06,
+                'Total_Energy': 0.3,
+                'Total_Protein': 0.8,
+                'Total_Fat': 0.04,
+                'Total_Carbs': 0.04,
+                'Total_Fibre': 0.04,
                 'Total_Calcium': 0.04,
                 'Total_Iron': 0.04,
                 'Total_Folate': 0.02,
-                'veg_q': 0.03,
-                'veg_s': 0.01,
-                'fru_q': 0.03,
-                'fru_s': 0.01,
+                'veg_q': 0.06,
+                'veg_s': 0.02,
+                'fru_q': 0.06,
+                'fru_s': 0.02,
                 'jui_s': 0,
-                'leg_q': 0.05,
-                'dai_q': 0.02,
-                'dai_s': 0.005,
-                'che_q': 0.01,
-                'che_s': 0.005,
-                'nns_q': 0.03,
+                'leg_q': 0.1,
+                'dai_q': 0.04,
+                'dai_s': 0.01,
+                'che_q': 0.02,
+                'che_s': 0.01,
+                'nns_q': 0.06,
             }
         else:
             base = self.user_settings["base_energy"]
@@ -200,33 +206,33 @@ class BaseFunctions:
                 'oif_s': 1,
             }
             self.NUTRITION_WEIGHTS = {
-                'Total_Energy': 0.4,
-                'Total_Protein': 0.12,
-                'Total_Fat': 0.06,
-                'Total_Carbs': 0.06,
-                'Total_Fibre': 0.06,
+                'Total_Energy': 0.3,
+                'Total_Protein': 0.8,
+                'Total_Fat': 0.04,
+                'Total_Carbs': 0.04,
+                'Total_Fibre': 0.04,
                 'Total_Calcium': 0.04,
                 'Total_Iron': 0.04,
                 'Total_Folate': 0.02,
-                'veg_q': 0.02,
-                'veg_s': 0.005,
-                'fru_q': 0.02,
-                'fru_s': 0.005,
+                'veg_q': 0.04,
+                'veg_s': 0.01,
+                'fru_q': 0.04,
+                'fru_s': 0.01,
                 'jui_s': 0,
-                'leg_q': 0.05,
-                'dai_q': 0.01,
-                'dai_s': 0.005,
-                'che_q': 0.005,
-                'che_s': 0.005,
-                'nns_q': 0.025,
-                'mea_q': 0.01,
-                'mea_s': 0.005,
-                'blv_q': 0.005,
-                'blv_s': 0.005,
-                'fis_q': 0.01,
-                'fis_s': 0.005,
-                'oif_q': 0.005,
-                'oif_s': 0.005,
+                'leg_q': 0.1,
+                'dai_q': 0.02,
+                'dai_s': 0.01,
+                'che_q': 0.01,
+                'che_s': 0.01,
+                'nns_q': 0.05,
+                'mea_q': 0.02,
+                'mea_s': 0.01,
+                'blv_q': 0.01,
+                'blv_s': 0.01,
+                'fis_q': 0.02,
+                'fis_s': 0.01,
+                'oif_q': 0.01,
+                'oif_s': 0.01,
             }
 
     def _filtering(self):
@@ -311,6 +317,7 @@ class BaseFunctions:
         dnps = np.sqrt(np.sum(weighted_squared, axis=1))
         ndnps = dnps / (dnps + 1.0)
         return dnps, ndnps
+
 
 class DailyMealPlanGenerator(BaseFunctions):
     def __init__(self, user_settings):
@@ -403,6 +410,7 @@ class DailyMealPlanGenerator(BaseFunctions):
         final_plans.sort(key=lambda x: x['NDNPS'])
         return final_plans
 
+
 class WeeklyMealPlanGenerator(BaseFunctions):
     def __init__(self, daily_plans, user_settings):
         super().__init__(user_settings, is_daily=False)
@@ -473,6 +481,7 @@ class WeeklyMealPlanGenerator(BaseFunctions):
         # Sort & return top
         return self._assemble_plans(filtered_combo_indices, weekly_totals, dnps, ndnps)
 
+
 class Divercity():
     def __init__(self, weekly_plans):
         self.weekly_plans = weekly_plans
@@ -500,6 +509,7 @@ class Divercity():
         df = pd.DataFrame(weekly_plan['meals'], columns, rows).transpose()
         print(f'Divercity depth: {dd}')
         print(df)
+
 
 class Command(BaseCommand):
     help = 'Generate personalized weekly meal plans'
@@ -533,4 +543,3 @@ class Command(BaseCommand):
                 ],
             'sex': 'male',
         }
-

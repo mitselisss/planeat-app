@@ -11,10 +11,10 @@ from django.db.models import Count
 def user_action(request):
     # print(request.data['user_id'])
     # print(request.data['action'])
-    
+
     user = User.objects.get(id=request.data['user_id'])
     action=request.data['action']
-    
+
     messages = []
 
     # create a record for the users new action
@@ -30,20 +30,19 @@ def user_action(request):
     # print("---->", day)
     # print(action)
 
-    match action:
-        case "login":
-            messages += login(user, action, start_date, day)
-        case "analytics":
-            messages += analytics(user, action, start_date, day)
-        case "add_eaten_meal":
-            messages += add_eaten_meal(user, action, start_date, day)
-        case "remove_eaten_meal":
-            messages += remove_eaten_meal(user, action, start_date, day)
-        case "download_weekly_plan":
-            messages += download_weekly_plan(user, action, start_date, day)
-        case "download_shopping_list":
-            messages += download_shopping_list(user, action, start_date, day)
-    
+    if action == "login":
+        messages += login(user, action, start_date, day)
+    elif action == "analytics":
+        messages += analytics(user, action, start_date, day)
+    elif action == "add_eaten_meal":
+        messages += add_eaten_meal(user, action, start_date, day)
+    elif action == "remove_eaten_meal":
+        messages += remove_eaten_meal(user, action, start_date, day)
+    elif action == "download_weekly_plan":
+        messages += download_weekly_plan(user, action, start_date, day)
+    elif action == "download_shopping_list":
+        messages += download_shopping_list(user, action, start_date, day)
+
     trails(user)
     level(user)
 
@@ -114,7 +113,7 @@ def analytics(user, action, start_date, day):
         UserActionAchievements.objects.create(
             user=user, day=day, action=action, start_date=start_date, reason="daily_analytics"
         )
-    
+
     user_achievements = UserAchievements.objects.get(user=user)
     count_analytics = UserActionAchievements.objects.filter(
         user=user, action=action, reason="daily_analytics"
@@ -146,7 +145,7 @@ def add_eaten_meal(user, action, start_date, day):
     UserActionAchievements.objects.create(user=user, day=day, action=action, start_date=start_date, reason="check_meal", points=2)
     UserAchievements.objects.filter(user=user).update(points=F('points') + 2)
     messages.append("Awesome! You earned 2 points for eating this meal!")
-    
+
     count_add_meals_daily = UserActionAchievements.objects.filter(user=user, action=action, start_date=start_date, day=day, reason="check_meal").count()
     count_remove_meals_daily = UserActionAchievements.objects.filter(user=user, action=action, start_date=start_date, day=day, reason="uncheck_meal").count()
     count_meals_daily = count_add_meals_daily - count_remove_meals_daily
@@ -468,7 +467,7 @@ def trails(user):
             'download_shopping_list/grocery_general'
         ]
     }
-    
+
     messages = []
 
     for trail_name, required_badges in trail_map.items():

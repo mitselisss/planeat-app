@@ -66,12 +66,4 @@ def create_user_profile(request, user_id):
                                 Allergies=allergies, Preferences=preferences,
                                 Selected_Cuisines=selected_cuisines)
 
-    UserAchievements.objects.create(
-        user=user,
-        points=0,
-        badges=[],
-        trails=[],
-        level=1
-    )
     return JsonResponse({'message': 'User created.'}, status=200)
-

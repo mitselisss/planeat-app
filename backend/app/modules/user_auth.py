@@ -11,7 +11,7 @@ from django.conf import settings
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from ..models import UserProfile
+from ..models import UserProfile, UserAchievements
 
 @api_view(['POST'])
 def login(request):
@@ -29,9 +29,8 @@ def login(request):
 
         if user.is_active == False:
             return JsonResponse({'error': 'User not active.'}, status=400)
-        
+
         user_password = user.password
-        # print(check_password(password, user_password))
         if check_password(password, user_password):
             refresh = RefreshToken.for_user(user)
 
@@ -56,7 +55,7 @@ def register(request):
     # Check the request method.
     if request.method != 'POST':
         return JsonResponse({"error": "No POST request."}, status=400)
-    
+
     data = request.data
     username = data["username"]
     email = data["email"]
@@ -68,7 +67,7 @@ def register(request):
         return JsonResponse({'error': "Email already exist"}, status=400)
     if User.objects.filter(username=username).exists():
         return JsonResponse({'error': "Username already exist"}, status=400)
-    
+
     # Create the user
     user = User.objects.create_user(username=username, email=email, password=password, is_active=False)
     refresh = RefreshToken.for_user(user)
@@ -78,7 +77,7 @@ def register(request):
         expiration_hours = 24
         expiration_timestamp = int((datetime.datetime.now() + timedelta(hours=expiration_hours)).timestamp())
         token = signer.sign(f'{refresh}:{expiration_timestamp}')
-        
+
         email_context = {
             'username': user.username,
             'activation_link': f'http://195.251.117.84:4000/pages/activation/accountActivationPage/{token}',
@@ -93,9 +92,17 @@ def register(request):
             settings.EMAIL_HOST_USER,
             [user.email]
         )
-        
+
         email.fail_silently=False
         email.send()
+
+        UserAchievements.objects.create(
+            user=user,
+            points=0,
+            badges=[],
+            trails=[],
+            level=1
+        )
     except ImportError:
         return JsonResponse({'error': "Email was not send"}, status=400)
 
@@ -118,11 +125,11 @@ def reset_password(request, token):
         refresh_token, expiration_timestamp = signer.unsign(token).split(':')
         refresh = RefreshToken(refresh_token)
         user_id = refresh.payload.get('user_id')
-        
+
         # Convert the expiration timestamp to a datetime object
         expiration_datetime = datetime.datetime.fromtimestamp(int(expiration_timestamp))
         #print(expiration_datetime)
-        
+
         # Check if the token has expired
         if datetime.datetime.now() <= expiration_datetime:
             user = User.objects.get(id = user_id)
@@ -130,7 +137,7 @@ def reset_password(request, token):
             user.password = password
             user.save()
             return JsonResponse("successful change password", status=200, safe=False)
-        
+
             # try:
             #     validate_password(password)
             #     validate_password(password2)
@@ -145,7 +152,7 @@ def reset_password(request, token):
             #     return JsonResponse({'error': "Invalid password. Please check for the password validations"}, status=400)
         else:
             return JsonResponse("Activation link has expired.", status=400, safe=False)
-        
+
     except SignatureExpired:
         return JsonResponse("Activation link has expired.", status=400, safe=False)
     except BadSignature:
@@ -167,7 +174,7 @@ def reset_password_email(request, email):
             expiration_hours = 24
             expiration_timestamp = int((datetime.datetime.now() + timedelta(hours=expiration_hours)).timestamp())
             token = signer.sign(f'{refresh}:{expiration_timestamp}')
-                
+
             email_context = {
                 'username': user.username,
                 'resetpassword_link': f'http://195.251.117.84:4000/pages/password/resetPasswordPage/{token}',
@@ -181,13 +188,13 @@ def reset_password_email(request, email):
                 email_body,
                 settings.EMAIL_HOST_USER,
                 [user.email]
-            )            
+            )
             email.fail_silently=False
             email.send()
 
-            return JsonResponse("Email send successfully", safe=False)    
+            return JsonResponse("Email send successfully", safe=False)
         except :
-            return JsonResponse({'error': "Email was not send"}, status=400) 
+            return JsonResponse({'error': "Email was not send"}, status=400)
     except:
         return JsonResponse({'error': "No active account matches this email address"}, status=400)
 
@@ -203,21 +210,21 @@ def activate(request, token):
         refresh_token, expiration_timestamp = signer.unsign(token).split(':')
         refresh = RefreshToken(refresh_token)
         user_id = refresh.payload.get('user_id')
-        
+
         # Convert the expiration timestamp to a datetime object
         expiration_datetime = datetime.datetime.fromtimestamp(int(expiration_timestamp))
         #print(expiration_datetime)
-        
+
         # Check if the token has not expired
         if datetime.datetime.now() <= expiration_datetime:
             user = User.objects.get(id = user_id)
             user.is_active = True
             user.save()
             return JsonResponse("Activation successful", safe=False)
-        else: 
+        else:
             return JsonResponse({'error': "Activation link has expired 1."}, status=400, safe=False)
     except SignatureExpired:
-        return JsonResponse({'error': "Activation link has expired 2."}, status=400) 
+        return JsonResponse({'error': "Activation link has expired 2."}, status=400)
     except BadSignature:
         return JsonResponse({'error': "Invalid activation link 3."}, status=400)
 
@@ -234,7 +241,7 @@ def activation_email(request, email):
             expiration_hours = 24
             expiration_timestamp = int((datetime.datetime.now() + timedelta(hours=expiration_hours)).timestamp())
             token = signer.sign(f'{refresh}:{expiration_timestamp}')
-            
+
             email_context = {
                 'username': user.username,
                 'activation_link': f'http://195.251.117.84:4000/pages/activation/accountActivationPage/{token}',
@@ -249,11 +256,11 @@ def activation_email(request, email):
                 settings.EMAIL_HOST_USER,
                 [user.email]
             )
-            
+
             email.fail_silently=False
             email.send()
-            return JsonResponse("Email send successfully", safe=False)    
+            return JsonResponse("Email send successfully", safe=False)
         except :
-            return JsonResponse({'error': "Email was not send"}, status=400) 
+            return JsonResponse({'error': "Email was not send"}, status=400)
     except:
         return JsonResponse({'error': "No account matches this email address"}, status=400)

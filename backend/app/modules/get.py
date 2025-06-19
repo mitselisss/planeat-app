@@ -293,13 +293,13 @@ def get_weekly_food_user_goal_categories(request, user_id, week_monday):
 
 
     food_group_dict = {
-        "Meat": [0, 0],
-        "Plant_protein": [0, 0],
-        "Vegetables": [0, 0],
-        "Fruit": [0, 0],
-        "Dairy": [0, 0],
-        "Nuts_and_seeds": [0, 0],
-        "Fish": [0, 0],
+        "Meat": [0, 0, 0],
+        "Plant_protein": [0, 0, 0],
+        "Vegetables": [0, 0, 0],
+        "Fruit": [0, 0, 0],
+        "Dairy": [0, 0, 0],
+        "Nuts_and_seeds": [0, 0, 0],
+        "Fish": [0, 0, 0],
     }
 
     for np_item in np_items:
@@ -322,6 +322,9 @@ def get_weekly_food_user_goal_categories(request, user_id, week_monday):
         "Fish": ["J", "JA", "JC", "JK", "JM", "JR"],
     }
 
+    user_energy_intake = user_profile.Energy_Intake
+    base_energy_intake = 2500
+
     for i, np_item in enumerate(np_items):
         food_groups = np_item.meal.Food_Groups_Counter
         for group, counter, quantity in food_groups:
@@ -330,6 +333,16 @@ def get_weekly_food_user_goal_categories(request, user_id, week_monday):
                     food_group_dict[experts_group][0] += counter
                     food_group_dict[experts_group][1] += quantity
 
+    #print(food_group_dict)
+    food_group_dict['Meat'][2] = (user_energy_intake*420)/base_energy_intake
+    food_group_dict['Plant_protein'][2] = (user_energy_intake*125*7)/base_energy_intake
+    food_group_dict['Vegetables'][2] = (user_energy_intake*300*7)/base_energy_intake
+    food_group_dict['Fruit'][2] = (user_energy_intake*200*7)/base_energy_intake
+    food_group_dict['Dairy'][2] = (user_energy_intake*125*7)/base_energy_intake
+    food_group_dict['Nuts_and_seeds'][2] = (user_energy_intake*30*7)/base_energy_intake
+    food_group_dict['Fish'][2] = (user_energy_intake*200)/base_energy_intake
+
+    print(food_group_dict)
     return Response(food_group_dict)
 
 
@@ -367,35 +380,8 @@ def get_weekly_food_categories(request, user_id, week_monday):
         "Sugars, preserves and snacks": [0, 0],
         "Soups, sauces and miscellaneous foods": [0, 0],
         "Other":  [0, 0],
-
-        # "Meat": [0, 0],
-        # "Plant_protein": [0, 0],
-        # "Vegetables": [0, 0],
-        # "Fruit": [0, 0],
-        # "Dairy": [0, 0],
-        # "Nuts_and_seeds": [0, 0],
-        # "Fish": [0, 0],
     }
 
-    # for np_item in np_items:
-    #     meal = np_item.meal
-    #     for key, value in food_group_dict.items():
-    #         food_group_dict[key][0] += getattr(meal, key)
-
-    # food_group_dict_experts = { # experts
-    #     # exclude all foods from CoFID food group codes MI and MIG (processed meats)
-    #     "Meat": ["MA", "MAA", "MAC", "MAE", "MAG", "MAI", "MC", "MCA", "MCC", "MCE", "MCG", "MI",
-    #              "MCK", "MCM", "MCO", "ME", "MEA", "MEC", "MEE", "MG", "MBG", "MI", "MIG", "MR"],
-    #     "Plant_protein": ["DB"],
-    #     "Vegetables": ["DF", "DG", "DI", "DR"],
-    #     # with no more than 1 serving per day from FC
-    #     "Fruit": ["F", "FA", "FC"],
-    #     # with no more than 1 serving of BL per day
-    #     "Dairy": ["BA", "BC", "BL", "BN"],
-    #     "Nuts_and_seeds": ["G", "GA"],
-    #     # with at least 1 serving per week from JC
-    #     "Fish": ["J", "JA", "JC", "JK", "JM", "JR"],
-    # }
 
     for i, np_item in enumerate(np_items):
         food_groups = np_item.meal.Food_Groups_Counter
@@ -666,7 +652,7 @@ def get_user_profile(request, user_id):
         "goal": user_profile.Goal,
         "target_goal": user_profile.TargetGoal,
         "pilot_country": user_profile.Pilot_Country,
-        "main_screen": user_profile.Main_screen
+        "main_screen": user_profile.Main_screen,
     }
 
     return Response(user_info)
