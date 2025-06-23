@@ -33,8 +33,22 @@ const ProfileForm1 = ({ page, setPage, formData, setFormData }) => {
 
     useEffect(() => {
         // console.log(formData);
-        if (formData.role === 'test') {
+        if (formData.role === 'living_lab') {
             setFormData({ ...formData, country: '' });
+            if (
+                formData.roleStatus === 'valid' &&
+                formData.countryStatus === 'valid' &&
+                formData.sexStatus === 'valid' &&
+                formData.yobStatus === 'valid' &&
+                formData.heightStatus === 'valid' &&
+                formData.weightStatus === 'valid' &&
+                formData.palStatus === 'valid'
+            ) {
+                setDisabled(false);
+            } else {
+                setDisabled(true);
+            }
+        } else if (formData.role === 'consortium') {
             if (
                 formData.roleStatus === 'valid' &&
                 formData.sexStatus === 'valid' &&
@@ -47,10 +61,9 @@ const ProfileForm1 = ({ page, setPage, formData, setFormData }) => {
             } else {
                 setDisabled(true);
             }
-        } else if (formData.role === 'pilot') {
+        } else if (formData.role === 'test') {
             if (
                 formData.roleStatus === 'valid' &&
-                formData.countryStatus === 'valid' &&
                 formData.sexStatus === 'valid' &&
                 formData.yobStatus === 'valid' &&
                 formData.heightStatus === 'valid' &&
@@ -248,7 +261,7 @@ const ProfileForm1 = ({ page, setPage, formData, setFormData }) => {
                 <MenuItem value="test">Othes Unofficial Tester</MenuItem>
             </TextField>
 
-            {formData.role === 'pilot' && (
+            {formData.role === 'living_lab' && (
                 <TextField
                     select
                     fullWidth
