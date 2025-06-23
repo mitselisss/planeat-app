@@ -21,8 +21,25 @@ export default function Footer2() {
                         </Link> */}
 
                 <Typography sx={{ mt: '10px' }} variant="body2">
-                    <span style={{ color: theme.palette.success.dark }}>PLAN’EAT</span> is a Horizon Europe research project (2022–2026)
-                    bringing together 24 partners, funded by the EU under Grant Agreement No. 101061023.
+                    <Link
+                        href="https://planeat-project.eu/"
+                        sx={{ color: theme.palette.success.dark }}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        PLANEAT
+                    </Link>{' '}
+                    is a Horizon Europe research project (2022–2026) bringing together 24 partners, funded by the EU under Grant Agreement
+                    No.{' '}
+                    <Link
+                        href="https://cordis.europa.eu/project/id/101061023"
+                        sx={{ color: theme.palette.success.dark }}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        101061023
+                    </Link>
+                    .
                 </Typography>
             </Grid>
 

@@ -28,15 +28,31 @@ export default function Footer() {
                         </Link>
 
                         <Typography sx={{ mt: '10px' }} variant="body2" color={theme.palette.primary.light}>
-                            PLAN’EAT is a Horizon Europe research project, bringing together 24 partners and running from September 2022 to
-                            2026.
+                            <Link
+                                href="https://planeat-project.eu/"
+                                sx={{ color: theme.palette.primary.light }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                PLANEAT
+                            </Link>{' '}
+                            is a Horizon Europe research project, bringing together 24 partners and running from September 2022 to 2026.
                         </Typography>
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <img src={EUlogo} style={{ height: 55, width: 85 }} alt="EUlogo" />;
                         <Typography sx={{ mt: '10px' }} variant="body2" color={theme.palette.primary.light}>
                             This project has received funding from the European Union’s Horizon Europe Research and Innovation programme
-                            under Grant Agreement n° 101061023.
+                            under Grant Agreement n°{' '}
+                            <Link
+                                href="https://cordis.europa.eu/project/id/101061023"
+                                sx={{ color: theme.palette.primary.light }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                101061023
+                            </Link>
+                            .
                         </Typography>
                     </Grid>
                     <Grid item xs={12} sm={4}>
