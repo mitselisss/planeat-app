@@ -258,7 +258,7 @@ const ProfileForm1 = ({ page, setPage, formData, setFormData }) => {
             >
                 <MenuItem value="living_lab">Living Lab User (Research Participant)</MenuItem>
                 <MenuItem value="consortium">PLANEAT Consortium Member</MenuItem>
-                <MenuItem value="test">Othes Unofficial Tester</MenuItem>
+                <MenuItem value="test">Other Unofficial Tester</MenuItem>
             </TextField>
 
             {formData.role === 'living_lab' && (
