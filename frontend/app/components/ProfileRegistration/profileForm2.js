@@ -32,6 +32,8 @@ const ProfileForm2 = ({ page, setPage, formData, setFormData }) => {
     const [disabled, setDisabled] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
+    const [checked, setChecked] = useState(false);
+    const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
     // const [goal, setGoal] = useState(''); // Increase, decrese or keep the same weight
     // const [targetGoal, setTargetGoal] = useState('normal'); // normal or fast programm
@@ -183,6 +185,15 @@ const ProfileForm2 = ({ page, setPage, formData, setFormData }) => {
         setIsSubmitting(false);
     };
 
+    const handleChange = (e) => {
+        setChecked(e.target.checked);
+        if (e.target.checked) {
+            setFormData({ ...formData, target_weight: formData.weight, target_weight_status: 'valid', goal: '', targetGoal: '' });
+        } else {
+            setFormData({ ...formData, target_weight: '', target_weight_status: '', goal: '', targetGoal: '' });
+        }
+    };
+
     return (
         <div className="login-page">
             <Box
@@ -212,6 +223,7 @@ const ProfileForm2 = ({ page, setPage, formData, setFormData }) => {
                         label="Target Weight"
                         variant="outlined"
                         margin="normal"
+                        disabled={checked}
                         sx={{
                             '& .MuiFormHelperText-root': {
                                 color:
@@ -243,7 +255,7 @@ const ProfileForm2 = ({ page, setPage, formData, setFormData }) => {
                 </FormControl>
             </Box>
 
-            {formData.target_weight_status === 'valid' && formData.goal !== 'same' && (
+            {formData.target_weight_status === 'valid' && formData.goal !== 'same' && !checked && (
                 <MainCard sx={{ backgroundColor: theme.palette.success[100] }}>
                     <Grid
                         container
@@ -309,6 +321,13 @@ const ProfileForm2 = ({ page, setPage, formData, setFormData }) => {
                     </Grid>
                 </MainCard>
             )}
+
+            <Box>
+                <FormControlLabel
+                    control={<Checkbox size="small" checked={checked} onChange={handleChange} />}
+                    label={<Typography variant="subtitle2">I prefer to maintain my weight</Typography>}
+                />
+            </Box>
 
             <Box
                 sx={{
