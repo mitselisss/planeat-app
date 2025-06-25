@@ -10,18 +10,16 @@ import { register } from 'services/api';
 import { useTheme } from '@mui/material/styles';
 import {
     Box,
-    Button,
     Checkbox,
-    Divider,
+    Button,
     FormControl,
-    FormControlLabel,
     FormHelperText,
     Grid,
+    FormControlLabel,
     IconButton,
     InputAdornment,
     InputLabel,
     OutlinedInput,
-    TextField,
     Typography,
     useMediaQuery
 } from '@mui/material';
@@ -32,7 +30,6 @@ import { Formik } from 'formik';
 
 // project imports
 import useScriptRef from 'hooks/useScriptRef';
-import Google from 'assets/images/icons/social-google.svg';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
 
@@ -49,14 +46,11 @@ const FirebaseRegister = ({ ...others }) => {
     const customization = useSelector((state) => state.customization);
     const [showPassword, setShowPassword] = useState(false);
     const [checked, setChecked] = useState(true);
+    const [privacyChecked, setPrivacyChecked] = useState(false);
     const navigate = useNavigate();
 
     const [strength, setStrength] = useState(0);
     const [level, setLevel] = useState();
-
-    const googleHandler = async () => {
-        console.error('Register');
-    };
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
@@ -260,6 +254,31 @@ const FirebaseRegister = ({ ...others }) => {
                             </FormControl>
                         )}
 
+                        <Grid item xs={12}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={privacyChecked}
+                                        onChange={(e) => setPrivacyChecked(e.target.checked)}
+                                        color="success"
+                                    />
+                                }
+                                label={
+                                    <Typography variant="subtitle2" sx={{ textAlign: 'justify' }}>
+                                        I confirm that I have read the{' '}
+                                        <Link to="/pages/privacy-policy" target="_blank" rel="noopener">
+                                            Privacy Policy
+                                        </Link>{' '}
+                                        and I voluntarily provide my informed consent for participation and data processing as detailed{' '}
+                                        <Link to="/pages/data-policy" target="_blank" rel="noopener">
+                                            here
+                                        </Link>
+                                        .
+                                    </Typography>
+                                }
+                            />
+                        </Grid>
+
                         {/* <Grid container alignItems="center" justifyContent="space-between">
                             <Grid item>
                                 <FormControlLabel
@@ -292,7 +311,7 @@ const FirebaseRegister = ({ ...others }) => {
                             <AnimateButton>
                                 <Button
                                     disableElevation
-                                    disabled={strength <= 2 || !isValid || isSubmitting}
+                                    disabled={strength <= 2 || !isValid || isSubmitting || !privacyChecked}
                                     fullWidth
                                     size="large"
                                     type="submit"

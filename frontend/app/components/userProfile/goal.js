@@ -5,6 +5,7 @@ import {
     Grid,
     Button,
     Box,
+    Checkbox,
     TextField,
     FormControl,
     FormHelperText,
@@ -49,6 +50,7 @@ const Goal = ({ isLoading, isFetchingData, formData, setFormData }) => {
     const [errorMessage, setErrorMessage] = useState();
     const [successMessage, setSuccessMessage] = useState();
     const [infoMessage, setInfoMessage] = useState();
+    const [checked, setChecked] = useState(formData.weight === formData.target_weight);
 
     useEffect(() => {
         let weeks = { goal: '', slow_weeks: null, normal_weeks: null, fast_weeks: null };
@@ -57,6 +59,15 @@ const Goal = ({ isLoading, isFetchingData, formData, setFormData }) => {
         setNormalWeeks(weeks.normal_weeks);
         setFastWeeks(weeks.fast_weeks);
     }, [formData.weight]);
+
+    const handleChange = (e) => {
+        setChecked(e.target.checked);
+        if (e.target.checked) {
+            setFormData({ ...formData, target_weight: formData.weight, target_weight_status: 'valid', goal: '', targetGoal: '' });
+        } else {
+            setFormData({ ...formData, target_weight: '', target_weight_status: '', goal: '', targetGoal: '' });
+        }
+    };
 
     const handleWeightChange = (e) => {
         const value = e.target.value;
@@ -230,6 +241,7 @@ const Goal = ({ isLoading, isFetchingData, formData, setFormData }) => {
                                 label="Target Weight"
                                 variant="outlined"
                                 margin="normal"
+                                disabled={checked || isSubmiting}
                                 sx={{
                                     '& .MuiFormHelperText-root': {
                                         color:
@@ -257,38 +269,47 @@ const Goal = ({ isLoading, isFetchingData, formData, setFormData }) => {
                                         ? 'Weight must be between 30 and 300 kg'
                                         : ''
                                 }
-                                disabled={isSubmiting}
                             />
                         </FormControl>
                     </Box>
 
-                    {formData.weightStatus === 'valid' && formData.target_weight_status === 'valid' && formData.goal !== 'same' && (
-                        <MainCard sx={{ backgroundColor: theme.palette.success[100] }}>
-                            <Grid
-                                container
-                                alignItems="center" // Vertically center
-                                justifyContent="center" // Horizontally center
-                                direction="column" // Align everything vertically
-                                spacing={1} // Optional spacing between items
-                            >
-                                <FormControl>
-                                    <FormLabel
-                                        id="demo-row-radio-buttons-group-label"
-                                        sx={{ textAlign: 'center' }} // Center the label
-                                    >
-                                        Caloric Goal
-                                    </FormLabel>
-                                    <RadioGroup
-                                        row
-                                        aria-labelledby="demo-row-radio-buttons-group-label"
-                                        name="row-radio-buttons-group"
-                                        spacing={1}
-                                        value={formData.targetGoal}
-                                        onChange={handleTargetGoalChange}
-                                        sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', gap: 2 }}
-                                        disabled={isSubmiting}
-                                    >
-                                        {/* <FormControlLabel
+                    <Box>
+                        <FormControlLabel
+                            control={<Checkbox size="small" checked={checked} onChange={handleChange} />}
+                            label={<Typography variant="subtitle2">I prefer to maintain my weight</Typography>}
+                        />
+                    </Box>
+
+                    {formData.weightStatus === 'valid' &&
+                        formData.target_weight_status === 'valid' &&
+                        formData.goal !== 'same' &&
+                        !checked && (
+                            <MainCard sx={{ mt: 2, backgroundColor: theme.palette.success[100] }}>
+                                <Grid
+                                    container
+                                    alignItems="center" // Vertically center
+                                    justifyContent="center" // Horizontally center
+                                    direction="column" // Align everything vertically
+                                    spacing={1} // Optional spacing between items
+                                >
+                                    <FormControl>
+                                        <FormLabel
+                                            id="demo-row-radio-buttons-group-label"
+                                            sx={{ textAlign: 'center' }} // Center the label
+                                        >
+                                            Caloric Goal
+                                        </FormLabel>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            spacing={1}
+                                            value={formData.targetGoal}
+                                            onChange={handleTargetGoalChange}
+                                            sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', gap: 2 }}
+                                            disabled={isSubmiting}
+                                        >
+                                            {/* <FormControlLabel
                                     value="slow"
                                     control={<Radio size="small" />}
                                     label={
@@ -297,42 +318,42 @@ const Goal = ({ isLoading, isFetchingData, formData, setFormData }) => {
                                         </Typography>
                                     }
                                 /> */}
-                                        <FormControlLabel
-                                            value="normal"
-                                            control={<Radio size="small" />}
-                                            label={
-                                                <Typography variant="subtitle2" color="textSecondary">
-                                                    {formData.goal === 'increase' ? `+500 kcal/day` : '-500 kcal/day'}
-                                                </Typography>
-                                            }
-                                        />
-                                        <FormControlLabel
-                                            value="fast"
-                                            control={<Radio size="small" />}
-                                            label={
-                                                <Typography variant="subtitle2" color="textSecondary">
-                                                    {formData.goal === 'increase' ? `+700 kcal/day` : '-700 kcal/day'}
-                                                </Typography>
-                                            }
-                                        />
-                                    </RadioGroup>
-                                    <Typography
-                                        variant="subtitle2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'center' }} // Center the week estimate text
-                                    >
-                                        {`Approximately ${
-                                            formData.targetGoal === 'normal'
-                                                ? normalWeeks
-                                                : formData.targetGoal === 'fast'
-                                                ? fastWeeks
-                                                : slowWeeks
-                                        } weeks to achieve your target goal`}
-                                    </Typography>
-                                </FormControl>
-                            </Grid>
-                        </MainCard>
-                    )}
+                                            <FormControlLabel
+                                                value="normal"
+                                                control={<Radio size="small" />}
+                                                label={
+                                                    <Typography variant="subtitle2" color="textSecondary">
+                                                        {formData.goal === 'increase' ? `+500 kcal/day` : '-500 kcal/day'}
+                                                    </Typography>
+                                                }
+                                            />
+                                            <FormControlLabel
+                                                value="fast"
+                                                control={<Radio size="small" />}
+                                                label={
+                                                    <Typography variant="subtitle2" color="textSecondary">
+                                                        {formData.goal === 'increase' ? `+700 kcal/day` : '-700 kcal/day'}
+                                                    </Typography>
+                                                }
+                                            />
+                                        </RadioGroup>
+                                        <Typography
+                                            variant="subtitle2"
+                                            color="textSecondary"
+                                            sx={{ textAlign: 'center' }} // Center the week estimate text
+                                        >
+                                            {`Approximately ${
+                                                formData.targetGoal === 'normal'
+                                                    ? normalWeeks
+                                                    : formData.targetGoal === 'fast'
+                                                    ? fastWeeks
+                                                    : slowWeeks
+                                            } weeks to achieve your target goal`}
+                                        </Typography>
+                                    </FormControl>
+                                </Grid>
+                            </MainCard>
+                        )}
 
                     {successMessage && (
                         <Box sx={{ mt: 3 }}>

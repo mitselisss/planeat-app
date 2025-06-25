@@ -6,6 +6,7 @@ import { Grid, Box } from '@mui/material';
 import PersonalInfo from 'components/userProfile/personalInfo';
 import Characteristics from 'components/userProfile/characteristics';
 import Goal from 'components/userProfile/goal';
+import Attributes from 'components/userProfile/attributes';
 
 import { getDecodedToken } from 'utils/tokenUtils';
 import { useNavigate } from '@remix-run/react';
@@ -47,7 +48,11 @@ const UserProfile = () => {
         dietaryPreferences: '',
         dietaryPreferencesStatus: 'valid',
         selectedCuisines: [''],
-        selectedCuisinesStatus: 'valid'
+        selectedCuisinesStatus: 'valid',
+        age: '',
+        bmi: '',
+        bmr: '',
+        energy_intake: ''
     });
 
     useEffect(() => {
@@ -88,7 +93,11 @@ const UserProfile = () => {
                     targetGoal: userProfile.target_goal,
                     allergies: userProfile.allergies,
                     dietaryPreferences: userProfile.preferences,
-                    selectedCuisines: userProfile.cuisine
+                    selectedCuisines: userProfile.cuisine,
+                    age: userProfile.age,
+                    bmi: userProfile.bmi,
+                    bmr: userProfile.bmr,
+                    energy_intake: userProfile.energy_intake
                 }));
             } catch (error) {
                 console.log(error.response?.data?.error || 'An unexpected error occurred');
@@ -119,6 +128,8 @@ const UserProfile = () => {
                     </Grid>
                     <Grid item xs={12} md={5}>
                         <Goal isLoading={isLoading} isFetchingData={isFetchingData} formData={formData} setFormData={setFormData} />
+                        <Box my={2} />
+                        <Attributes isLoading={isLoading} isFetchingData={isFetchingData} formData={formData} setFormData={setFormData} />
                     </Grid>
                 </Grid>
             </Grid>

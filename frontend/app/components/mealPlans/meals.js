@@ -1055,6 +1055,28 @@ const Meals = ({
                             </Grid>
                         ))}
                     </Box>
+
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            px: 5,
+                            py: 2,
+                            gap: 2
+                        }}
+                    >
+                        <Typography
+                            variant="subtitle2"
+                            sx={{
+                                textAlign: 'justify',
+                                fontStyle: 'italic'
+                            }}
+                        >
+                            "Please note that these menus are designed for the nutritional needs of the general population. If you are
+                            pregnant, breastfeeding or need to follow a special diet, consult a health professional."
+                        </Typography>
+                    </Box>
                 </CardWrapper>
             )}
         </>

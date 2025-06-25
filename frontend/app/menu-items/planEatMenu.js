@@ -5,7 +5,8 @@ import {
     IconShoppingCart,
     IconShoppingBag,
     IconBrandGoogleAnalytics,
-    IconInfoCircle
+    IconInfoCircle,
+    IconMessage
 } from '../../node_modules/@tabler/icons-react';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Badge from '@mui/material/Badge';
@@ -56,6 +57,14 @@ const planEatMenu = {
             type: 'item',
             url: '/analytics',
             icon: IconBrandGoogleAnalytics,
+            breadcrumbs: false
+        },
+        {
+            id: 'feedback',
+            title: 'Feedback',
+            type: 'item',
+            url: '/feedback',
+            icon: IconMessage,
             breadcrumbs: false
         },
         {

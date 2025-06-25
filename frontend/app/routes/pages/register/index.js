@@ -1,8 +1,9 @@
 import { Link } from '@remix-run/react';
+import { useState } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
+import { Divider, Grid, Stack, Typography, useMediaQuery, Checkbox, FormControlLabel } from '@mui/material';
 
 // project imports
 import AuthWrapper1 from 'components/authentication/AuthWrapper1';
@@ -18,6 +19,7 @@ import Footer from 'ui-component/cards/AuthFooter';
 const Register = () => {
     const theme = useTheme();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
+    const [isChecked, setIsChecked] = useState(false);
 
     return (
         <AuthWrapper1>
@@ -62,19 +64,31 @@ const Register = () => {
                                     <Grid item xs={12}>
                                         <AuthRegister />
                                     </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography variant="subtitle2" sx={{ textAlign: 'justify' }}>
-                                            By Sign Up, I confirm that I have read the{' '}
-                                            <Link to="/pages/privacy-policy" target="_blank" rel="noopener">
-                                                Privacy Policy
-                                            </Link>{' '}
-                                            and I voluntarily provide my informed consent for participation and data processing as detailed{' '}
-                                            <Link to="/pages/data-policy" target="_blank" rel="noopener">
-                                                here
-                                            </Link>
-                                            .
-                                        </Typography>
-                                    </Grid>
+                                    {/* <Grid item xs={12}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={isChecked}
+                                                    onChange={(e) => setIsChecked(e.target.checked)}
+                                                    color="primary"
+                                                />
+                                            }
+                                            label={
+                                                <Typography variant="subtitle2" sx={{ textAlign: 'justify' }}>
+                                                    I confirm that I have read the{' '}
+                                                    <Link to="/pages/privacy-policy" target="_blank" rel="noopener">
+                                                        Privacy Policy
+                                                    </Link>{' '}
+                                                    and I voluntarily provide my informed consent for participation and data processing as
+                                                    detailed{' '}
+                                                    <Link to="/pages/data-policy" target="_blank" rel="noopener">
+                                                        here
+                                                    </Link>
+                                                    .
+                                                </Typography>
+                                            }
+                                        />
+                                    </Grid> */}
                                     <Grid item xs={12}>
                                         <Divider />
                                     </Grid>
