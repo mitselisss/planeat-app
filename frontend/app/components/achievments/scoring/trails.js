@@ -445,10 +445,10 @@ const Trails = ({ achievements }) => {
                                         earned[10] ? (
                                             <Typography>
                                                 You've earned this badge!{' '}
-                                                <Typography fontStyle="italic">Mark 60 meals as eaten in 1 week</Typography>
+                                                <Typography fontStyle="italic">Mark 60 meals as eaten in 2 weeks</Typography>
                                             </Typography>
                                         ) : (
-                                            <Typography fontStyle="italic">Mark 60 meals as eaten in 1 week</Typography>
+                                            <Typography fontStyle="italic">Mark 60 meals as eaten in 2 weeks</Typography>
                                         )
                                     }
                                 >
@@ -680,10 +680,10 @@ const Trails = ({ achievements }) => {
                                         earned[11] ? (
                                             <Typography>
                                                 You've earned this badge!{' '}
-                                                <Typography fontStyle="italic">Mark 120 meals as eaten in 1 week</Typography>
+                                                <Typography fontStyle="italic">Mark 120 meals as eaten in 4 weeks</Typography>
                                             </Typography>
                                         ) : (
-                                            <Typography fontStyle="italic">Mark 120 meals as eaten in 1 week</Typography>
+                                            <Typography fontStyle="italic">Mark 120 meals as eaten in 4 weeks</Typography>
                                         )
                                     }
                                 >

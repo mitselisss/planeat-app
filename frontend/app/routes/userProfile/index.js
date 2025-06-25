@@ -60,6 +60,7 @@ const UserProfile = () => {
 
             try {
                 const userProfile = await getUserProfile(decodedToken.user_id);
+                console.log(userProfile);
 
                 const value =
                     userProfile.pal === '1.4'
