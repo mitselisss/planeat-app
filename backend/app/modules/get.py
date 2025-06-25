@@ -653,6 +653,10 @@ def get_user_profile(request, user_id):
         "target_goal": user_profile.TargetGoal,
         "pilot_country": user_profile.Pilot_Country,
         "main_screen": user_profile.Main_screen,
+        "bmi": user_profile.Bmi,
+        "bmr": user_profile.Bmr,
+        "energy_intake": user_profile.Energy_Intake,
+        "age": user_profile.Age,
     }
 
     return Response(user_info)
