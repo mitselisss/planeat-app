@@ -43,7 +43,7 @@ const MealPlan = () => {
         trackLogin();
         setLoading(false);
     }, []);
-    // LogoutAfterInactivity();
+    LogoutAfterInactivity();
 
     return (
         <Grid container spacing={2}>

@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { getDecodedToken } from 'utils/tokenUtils';
 import { useNavigate } from '@remix-run/react';
+import LogoutAfterInactivity from 'utils/logoutAfterInactivity';
 
 // export meta
 export const meta = () => ({
@@ -21,4 +22,6 @@ export default function Index() {
             navigate('/meal-plan');
         }
     }, []);
+
+    LogoutAfterInactivity();
 }
