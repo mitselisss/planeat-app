@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-u%p=d!6=#&_z=2*gzv^q))b__z4fgpk-!m!*ow&lh+^nviej8i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["195.251.117.56", "127.0.0.1", "146.59.126.175"]
+ALLOWED_HOSTS = ["195.251.117.56", "127.0.0.1", "146.59.126.175", "www.planeat-app.ovh"]
 CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
