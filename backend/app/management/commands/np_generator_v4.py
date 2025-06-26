@@ -60,7 +60,7 @@ def return_best_plan(user_settings):
     best_plan, divercity_depth = Divercity(weekly_plans).process()
 
     # Commend the two lines bolow if you want to run the command for virtual users' testing or uncomment them to run in the backend.
-    print_results(daily_plans, daily_targets, weekly_plans, weekly_targets, daily_gen.NUTRITION_WEIGHTS)
+    #print_results(daily_plans, daily_targets, weekly_plans, weekly_targets, daily_gen.NUTRITION_WEIGHTS)
     return best_plan # Commend this line if you want to run the command for virtual users' testing.
 
     return get_best_meal(
@@ -375,8 +375,11 @@ class DailyMealPlanGenerator(BaseFunctions):
 
     def process(self):
         meals = self._filtering()
+        print("--->", len(meals))
         meal_groups = self._get_five_meals(meals)
+        print("--->", len(meal_groups[0]), len(meal_groups[1]), len(meal_groups[2]), len(meal_groups[3]),len(meal_groups[4]))
         combos = self.generate_combinations(meal_groups)  # list of 100,000 tuples of 5 meals
+        print("--->", len(combos))
 
         # 1. Batch calculate nutrition for all combos
         daily_totals, field_list = self.batch_calculate_nutrition(combos)
