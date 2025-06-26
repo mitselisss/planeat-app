@@ -12,6 +12,7 @@ from .modules.update import update_user_profile, update_current_week_nps, update
 from .modules.shopping_list import get_shopping_list, add_to_shopping_list, remove_from_shopping_list, get_shopping_list_ingredients
 from .modules.check_eaten import get_check_eaten_list, add_to_check_eaten_list, remove_from_check_eaten_list
 from .modules.user_actions import user_action, get_user_achievements, get_user_action_achievements
+from .modules.feedback import *
 
 from app.views import *
 
@@ -60,4 +61,6 @@ urlpatterns = [
     path('api/user_actions', user_action, name='user_action'),
     path('api/get_user_achievements/<int:user_id>', get_user_achievements, name='get_user_achievements'),
     path('api/get_user_action_achievements/<int:user_id>', get_user_action_achievements, name='get_user_action_achievements'),
+
+    path('api/feedback/<int:user_id>', feedback, name='feedback'),
 ]

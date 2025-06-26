@@ -76,6 +76,7 @@ def login(user, action, start_date, day):
 
     # BADGES
     user_achievements = UserAchievements.objects.get(user=user)
+    #user_achievements, created = UserAchievements.objects.get_or_create(user=user)
     count_logins = UserActionAchievements.objects.filter(user=user, action=action, reason="daily_login").count()
 
     if "login/getting_started" not in user_achievements.badges and count_logins >= 3:
