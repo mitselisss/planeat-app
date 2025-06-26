@@ -16,7 +16,7 @@ import { ThemeProvider } from '@mui/material/styles';
 // assets
 import globalStyles from 'styles/style.css';
 import scrollBarStyle from 'react-perfect-scrollbar/dist/css/styles.css';
-import favicon from '../public/favicon.svg';
+import favicon from '../public/logo_planeat_dark.png';
 
 // export links
 export const links = () => [
