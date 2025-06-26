@@ -225,16 +225,20 @@ const Ingredinets = ({ isLoading, isFetchingData, setIsFetchingData, deleteFlag,
                             ))}
                         </Grid>
                     </Grid>
-                    <Snackbar
-                        open={open}
-                        autoHideDuration={4000}
-                        onClose={handleSnackbarClose}
-                        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                    >
-                        <Alert severity="success" sx={{ width: '100%' }}>
-                            {message}
-                        </Alert>
-                    </Snackbar>
+                    {messageQueue.map((msg, index) => (
+                        <Snackbar
+                            key={index}
+                            open={true}
+                            autoHideDuration={4000}
+                            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                            onClose={() => handleSnackbarClose(index)}
+                            sx={{ mt: index * 7 }} // offset to prevent overlap
+                        >
+                            <Alert severity="success" sx={{ width: '100%' }}>
+                                {msg}
+                            </Alert>
+                        </Snackbar>
+                    ))}
                 </CardWrapper>
             )}
         </>

@@ -9,8 +9,8 @@ import { getDecodedToken } from 'utils/tokenUtils';
 import { useNavigate } from '@remix-run/react';
 import LogoutAfterInactivity from 'utils/logoutAfterInactivity';
 import { userActions } from 'services/api';
+import { userFeedback } from 'services/api';
 
-import image1 from '../../assets/images/feedback/Group-575-1.png';
 import image2 from '../../assets/images/feedback/Frame-615.png';
 
 // material-ui
@@ -68,8 +68,16 @@ const FeedBackPage = () => {
         trackLogin();
     }, []);
 
-    const handleChange = (e) => {
+    const handleChange = async (e) => {
         setFeedback(e.target.value);
+    };
+
+    const handleSend = async () => {
+        try {
+            await userFeedback(decodedToken.user_id, feedback);
+        } catch (error) {
+            console.log(error.response?.data?.error || 'An unexpected error occurred');
+        }
     };
 
     LogoutAfterInactivity();
@@ -147,7 +155,7 @@ const FeedBackPage = () => {
                                         onChange={handleChange}
                                     />
                                     <Box mt={2} display="flex" justifyContent="flex-end">
-                                        <Button variant="contained" color="success" disabled={feedback === ''}>
+                                        <Button variant="contained" color="success" disabled={feedback === ''} onClick={handleSend}>
                                             Send
                                         </Button>
                                     </Box>

@@ -153,7 +153,9 @@ const Meals = ({
     // Call this function when you receive new feedback messages
     const addMessages = (messages) => {
         if (messages && messages.length > 0) {
+            // console.log(messageQueue);
             setMessageQueue((prevQueue) => [...prevQueue, ...messages]);
+            // console.log(messageQueue);
         }
     };
 
@@ -1035,16 +1037,20 @@ const Meals = ({
                                                                     />
                                                                 )}
                                                             </IconButton>
-                                                            <Snackbar
-                                                                open={open}
-                                                                autoHideDuration={4000}
-                                                                onClose={handleSnackbarClose}
-                                                                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                                                            >
-                                                                <Alert severity="success" sx={{ width: '100%' }}>
-                                                                    {message}
-                                                                </Alert>
-                                                            </Snackbar>
+                                                            {messageQueue.map((msg, index) => (
+                                                                <Snackbar
+                                                                    key={index}
+                                                                    open={true}
+                                                                    autoHideDuration={4000}
+                                                                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                                                                    onClose={() => handleSnackbarClose(index)}
+                                                                    sx={{ mt: index * 7 }} // offset to prevent overlap
+                                                                >
+                                                                    <Alert severity="success" sx={{ width: '100%' }}>
+                                                                        {msg}
+                                                                    </Alert>
+                                                                </Snackbar>
+                                                            ))}
                                                         </span>
                                                     </Tooltip>
                                                 </Grid>

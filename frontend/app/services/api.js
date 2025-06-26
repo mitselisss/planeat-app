@@ -325,3 +325,14 @@ export const getUserActionAchievments = async (userId) => {
         throw error;
     }
 };
+
+// -------------- Feedback --------------------- //
+
+export const userFeedback = async (userId, feedback) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/feedback/${userId}`, feedback);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
