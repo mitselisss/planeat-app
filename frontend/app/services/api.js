@@ -328,9 +328,9 @@ export const getUserActionAchievments = async (userId) => {
 
 // -------------- Feedback --------------------- //
 
-export const userFeedback = async (userId, feedback) => {
+export const userFeedback = async (userId, feedbackText) => {
     try {
-        const response = await axios.post(`${BASE_URL}/feedback/${userId}`, feedback);
+        const response = await axios.post(`${BASE_URL}/feedback/${userId}`, { feedback: feedbackText });
         return response.data;
     } catch (error) {
         throw error;
