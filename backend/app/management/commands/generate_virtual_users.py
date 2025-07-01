@@ -89,8 +89,8 @@ class Command(BaseCommand):
 
         # Code to iterate through each country, allergy, preference, sex, kcal and retrieve the best weekly meal plan.
         counter = 1
-        #for country in [["Irish"], ["Spain"], ["Hungary"], ["Irish", "Spain"], ["Irish", "Hungary"], ["Spain", "Hungary"], ["Irish", "Spain", "Hungary"]]:
-        for country in [["Irish"], ["Spain"], ["Hungary"], ["Irish", "Spain", "Hungary"]]:
+        #for country in [["Ireland"], ["Spain"], ["Hungary"], ["Ireland", "Spain"], ["Ireland", "Hungary"], ["Spain", "Hungary"], ["Ireland", "Spain", "Hungary"]]:
+        for country in [["Ireland"], ["Spain"], ["Hungary"], ["Ireland", "Spain", "Hungary"]]:
             results = []
             aa = 1
             for allergy, preference, n_samples in use_cases:
