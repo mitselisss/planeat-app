@@ -1,23 +1,19 @@
 import { useState, useEffect } from 'react';
 
 // material-ui
-import { Grid, Box, Typography, TextField, Button } from '@mui/material';
+import { Grid, Box, Typography, TextField, Button, Snackbar, Alert } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import { getDecodedToken } from 'utils/tokenUtils';
 import { useNavigate } from '@remix-run/react';
 import LogoutAfterInactivity from 'utils/logoutAfterInactivity';
-import { userActions } from 'services/api';
-import { userFeedback } from 'services/api';
+import { userActions, userFeedback } from 'services/api';
 
-import image2 from '../../assets/images/feedback/Frame-615.png';
+import feedbackImage from '../../assets/images/feedback/Frame-615.png';
 
-// material-ui
+// material-ui styling
 import { useTheme, styled } from '@mui/material/styles';
-import { Link } from '@remix-run/react';
-
-// ==============================|| SAMPLE PAGE ||============================== //
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -51,6 +47,8 @@ const FeedBackPage = () => {
     const theme = useTheme();
 
     const [feedback, setFeedback] = useState('');
+    const [message, setMessage] = useState('');
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     useEffect(() => {
         const trackLogin = async () => {
@@ -58,7 +56,7 @@ const FeedBackPage = () => {
                 navigate('/pages/login');
             } else {
                 try {
-                    await userActions(decodedToken.user_id, 'about');
+                    await userActions(decodedToken.user_id, 'feedback');
                 } catch (error) {
                     console.log(error.response?.data?.error || 'An unexpected error occurred');
                 }
@@ -68,16 +66,25 @@ const FeedBackPage = () => {
         trackLogin();
     }, []);
 
-    const handleChange = async (e) => {
+    const handleChange = (e) => {
         setFeedback(e.target.value);
     };
 
     const handleSend = async () => {
         try {
-            await userFeedback(decodedToken.user_id, feedback);
+            const response = await userFeedback(decodedToken.user_id, feedback);
+            if (response.status === 200) {
+                setFeedback('');
+                setMessage('Thank you for your feedback. We will try our best to improve!');
+                setOpenSnackbar(true);
+            }
         } catch (error) {
             console.log(error.response?.data?.error || 'An unexpected error occurred');
         }
+    };
+
+    const handleSnackbarClose = () => {
+        setOpenSnackbar(false);
     };
 
     LogoutAfterInactivity();
@@ -93,8 +100,8 @@ const FeedBackPage = () => {
                                 <Box display="flex" flexDirection="row" alignItems="flex-start" gap={2}>
                                     <Box>
                                         <img
-                                            src={image2}
-                                            alt="About section visual"
+                                            src={feedbackImage}
+                                            alt="Feedback visual"
                                             style={{ width: '200px', height: 'auto', borderRadius: '8px' }}
                                         />
                                     </Box>
@@ -113,17 +120,16 @@ const FeedBackPage = () => {
                                             Help us improve by taking a quick survey on your experience with the app. Your responses will
                                             guide us in making the platform better for you.
                                         </Typography>
-                                        <Box mb={2}></Box>
+                                        <Box mb={2} />
                                         <Typography>
-                                            {' '}
-                                            <Link
-                                                href=""
-                                                sx={{ color: theme.palette.success.dark }}
+                                            <a
+                                                href="#"
+                                                style={{ color: theme.palette.success.dark, textDecoration: 'none' }}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
                                                 👉 Take the Survey
-                                            </Link>
+                                            </a>
                                         </Typography>
                                     </Box>
                                 </Box>
@@ -131,7 +137,7 @@ const FeedBackPage = () => {
 
                             <Box my={2} />
 
-                            {/* OBJECTIVES Section */}
+                            {/* FEEDBACK Section */}
                             <CardWrapper>
                                 <Box>
                                     <Typography variant="h4" gutterBottom color={theme.palette.error.dark}>
@@ -155,7 +161,7 @@ const FeedBackPage = () => {
                                         onChange={handleChange}
                                     />
                                     <Box mt={2} display="flex" justifyContent="flex-end">
-                                        <Button variant="contained" color="success" disabled={feedback === ''} onClick={handleSend}>
+                                        <Button variant="contained" color="success" disabled={!feedback} onClick={handleSend}>
                                             Send
                                         </Button>
                                     </Box>
@@ -165,6 +171,18 @@ const FeedBackPage = () => {
                     </Grid>
                 </Grid>
             </Grid>
+
+            {/* Snackbar for success feedback */}
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={4000}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    {message}
+                </Alert>
+            </Snackbar>
         </MainCard>
     );
 };

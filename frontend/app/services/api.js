@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://195.251.117.56:7000/api';
+const BASE_URL = 'https://www.planeat-app.ovh/api';
 // const BASE_URL = 'http://127.0.0.1:8000/api';
 
 // --- Login - Register - Create User Profile --- //
@@ -331,7 +331,7 @@ export const getUserActionAchievments = async (userId) => {
 export const userFeedback = async (userId, feedbackText) => {
     try {
         const response = await axios.post(`${BASE_URL}/feedback/${userId}`, { feedback: feedbackText });
-        return response.data;
+        return response;
     } catch (error) {
         throw error;
     }
