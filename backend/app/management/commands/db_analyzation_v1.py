@@ -71,7 +71,7 @@ class Command(BaseCommand):
             "vegan": ~Q(Meat__gt=0) & ~Q(Fish__gt=0) & ~Q(Dairy__gt=0),  # Exclude Meat, Fish, and Dairy
         }
 
-        
+
         ALLERGY_FILTERS = {
             "milk_allergy": ~Q(Dairy__gt=0),
             "nuts_allergy": ~Q(Nuts_and_seeds__gt=0),
@@ -101,7 +101,7 @@ class Command(BaseCommand):
         """Memory-efficient random sampling without pre-generation"""
         for _ in range(100000):
             yield tuple(
-                random.choice(group) 
+                random.choice(group)
                 for group in meal_groups
             )
 
@@ -126,7 +126,7 @@ class Command(BaseCommand):
                         if len(meals) == 0:
                             print("error in _get_five_meals")
                             quit()
-                        
+
                         total = []
                         for idx, combo in enumerate(self._random_combination_generator(meals)):
                             nutrition = self.calculate_nutrition(combo)
@@ -150,7 +150,7 @@ class Command(BaseCommand):
             data = df[col].dropna()  # drop NaNs to avoid issues
             mean = data.mean()
             std = data.std()
-            
+
             # Plot histogram
             data.plot(kind='hist', ax=axes[i], bins=30, alpha=0.7, color='skyblue', edgecolor='black')
             axes[i].set_title(col)
@@ -201,7 +201,7 @@ class Command(BaseCommand):
         # Short names for dict keys, strip 'Total_' and lowercase
         short_names = [f.replace('Total_', '').lower() for f in fields]
 
-        for combo in [["Irish"], ["Spain"], ["Hungary"], ["Irish", "Spain"], ["Irish", "Hungary"], ["Spain", "Hungary"], ["Irish", "Spain", "Hungary"]]:
+        for combo in [["Ireland"], ["Spain"], ["Hungary"], ["Ireland", "Spain", "Hungary"]]:
             # Load nutrient arrays per meal type
             groups = []
             for meal_type in ['Breakfast', 'Snack', 'Lunch', 'Snack', 'Dinner']:
@@ -211,7 +211,7 @@ class Command(BaseCommand):
                     self.stdout.write(f"Skipping {combo}: no data for {meal_type}")
                     break
                 groups.append(data)
-            
+
             else:
                 # Compute per-group stats (min, max, mean, var)
                 mins  = np.stack([g.min(axis=0)  for g in groups])
@@ -240,7 +240,3 @@ class Command(BaseCommand):
         # Optionally, print or save as needed
         for combo_key, stats in country.items():
             self.stdout.write(f"{combo_key}: {stats}\n")
-
-
-
-
