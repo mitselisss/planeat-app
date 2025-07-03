@@ -61,7 +61,7 @@ def return_best_plan(user_settings):
 
     # Commend the two lines bolow if you want to run the command for virtual users' testing or uncomment them to run in the backend.
     #print_results(daily_plans, daily_targets, weekly_plans, weekly_targets, daily_gen.NUTRITION_WEIGHTS)
-    return best_plan # Commend this line if you want to run the command for virtual users' testing.
+    #return best_plan # Commend this line if you want to run the command for virtual users' testing.
 
     return get_best_meal(
         user_settings['a/a'],
@@ -153,26 +153,30 @@ class BaseFunctions:
                 'nns_q': current*30/base,
             }
             self.NUTRITION_WEIGHTS = {
-                'Total_Energy': 0.3,
-                'Total_Protein': 0.8,
-                'Total_Fat': 0.04,
-                'Total_Carbs': 0.04,
-                'Total_Fibre': 0.04,
+                'Total_Energy': 0.4,
+                'Total_Protein': 0.12,
+                'Total_Fat': 0.06,
+                'Total_Carbs': 0.06,
+                'Total_Fibre': 0.06,
                 'Total_Calcium': 0.04,
                 'Total_Iron': 0.04,
                 'Total_Folate': 0.02,
-                'veg_q': 0.06,
-                'veg_s': 0.02,
-                'fru_q': 0.06,
-                'fru_s': 0.02,
+                'veg_q': 0.03,
+                'veg_s': 0.01,
+                'fru_q': 0.03,
+                'fru_s': 0.01,
                 'jui_s': 0,
-                'leg_q': 0.1,
-                'dai_q': 0.04,
-                'dai_s': 0.01,
-                'che_q': 0.02,
-                'che_s': 0.01,
-                'nns_q': 0.06,
+                'leg_q': 0.05,
+                'dai_q': 0.02,
+                'dai_s': 0.005,
+                'che_q': 0.01,
+                'che_s': 0.005,
+                'nns_q': 0.03,
             }
+            # total = 0
+            # for _, value in self.NUTRITION_WEIGHTS.items():
+            #     total += value
+            # print("total =", total)
         else:
             base = self.user_settings["base_energy"]
             current = self.user_settings["energy_intake"]*7
@@ -206,34 +210,40 @@ class BaseFunctions:
                 'oif_s': 1,
             }
             self.NUTRITION_WEIGHTS = {
-                'Total_Energy': 0.3,
-                'Total_Protein': 0.8,
-                'Total_Fat': 0.04,
-                'Total_Carbs': 0.04,
-                'Total_Fibre': 0.04,
+                'Total_Energy': 0.4,
+                'Total_Protein': 0.12,
+                'Total_Fat': 0.06,
+                'Total_Carbs': 0.06,
+                'Total_Fibre': 0.06,
                 'Total_Calcium': 0.04,
                 'Total_Iron': 0.04,
                 'Total_Folate': 0.02,
-                'veg_q': 0.04,
-                'veg_s': 0.01,
-                'fru_q': 0.04,
-                'fru_s': 0.01,
+
+                'veg_q': 0.02,
+                'veg_s': 0.005,
+                'fru_q': 0.02,
+                'fru_s': 0.005,
                 'jui_s': 0,
-                'leg_q': 0.1,
-                'dai_q': 0.02,
-                'dai_s': 0.01,
+                'leg_q': 0.05,
+                'dai_q': 0.01,
+                'dai_s': 0.005,
                 'che_q': 0.01,
-                'che_s': 0.01,
-                'nns_q': 0.05,
-                'mea_q': 0.02,
-                'mea_s': 0.01,
+                'che_s': 0.005,
+                'nns_q': 0.025,
+
+                'mea_q': 0.01,
+                'mea_s': 0.005,
                 'blv_q': 0.01,
-                'blv_s': 0.01,
-                'fis_q': 0.02,
-                'fis_s': 0.01,
+                'blv_s': 0.005,
+                'fis_q': 0.01,
+                'fis_s': 0.005,
                 'oif_q': 0.01,
-                'oif_s': 0.01,
+                'oif_s': 0.005,
             }
+            # total = 0
+            # for _, value in self.NUTRITION_WEIGHTS.items():
+            #     total += value
+            # print("total =", total)
 
     def _filtering(self):
         '''
@@ -283,7 +293,7 @@ class BaseFunctions:
         breakfast = [m for m in meals if m['Type'] == "Breakfast"]
         snack = [m for m in meals if m['Type'] == "Snack"]
         lunch = [m for m in meals if m['Type'] == "Lunch"]
-        dinner = [m for m in meals if m['Type'] == "Dinner"]
+        dinner = [m for m in meals if m['Type'] in ["Dinner", "Evening Meal"]]
 
         return [breakfast, snack, lunch, snack, dinner]
 
@@ -375,11 +385,11 @@ class DailyMealPlanGenerator(BaseFunctions):
 
     def process(self):
         meals = self._filtering()
-        print("--->", len(meals))
+        #print("--->", len(meals))
         meal_groups = self._get_five_meals(meals)
-        print("--->", len(meal_groups[0]), len(meal_groups[1]), len(meal_groups[2]), len(meal_groups[3]),len(meal_groups[4]))
+        #print("--->", len(meal_groups[0]), len(meal_groups[1]), len(meal_groups[2]), len(meal_groups[3]), len(meal_groups[4]))
         combos = self.generate_combinations(meal_groups)  # list of 100,000 tuples of 5 meals
-        print("--->", len(combos))
+        #print("--->", combos)
 
         # 1. Batch calculate nutrition for all combos
         daily_totals, field_list = self.batch_calculate_nutrition(combos)
