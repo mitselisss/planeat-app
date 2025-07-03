@@ -10,6 +10,7 @@ import Logo from 'ui-component/Logo';
 import Footer from 'ui-component/cards/AuthFooter';
 import AuthWrapper1 from 'components/authentication/AuthWrapper1';
 import AuthCardWrapper from 'components/authentication/AuthCardWrapper';
+import { accountActivation } from 'services/api';
 
 import { useParams, useNavigate } from '@remix-run/react';
 import axios from 'axios';
@@ -28,7 +29,7 @@ const AccountActivationPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.post(`http://195.251.117.56:7000/api/activate/${token}`);
+                await accountActivation(token)
             } catch (error) {
                 navigate('/pages/activation/accountExpirePage');
             }

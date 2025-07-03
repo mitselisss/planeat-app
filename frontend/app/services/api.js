@@ -30,6 +30,15 @@ export const register = async (username, email, password) => {
     }
 };
 
+export const accountActivation = async (token) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/activate/${token}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const forgotPassword = async (email) => {
     try {
         const response = await axios.post(`${BASE_URL}/resetPasswordEmail/${email}`);
