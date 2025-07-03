@@ -27,7 +27,7 @@ class CreateNPSView(APIView):
             return Response({"error": "User already has weekly plan."}, status=status.HTTP_404_NOT_FOUND)
 
         result = create_nutrition_plan(user_profile)
-
+        print("----->", result)
         if "error" in result:
             return Response(result, status=status.HTTP_400_BAD_REQUEST)
 

@@ -61,7 +61,7 @@ def return_best_plan(user_settings):
 
     # Commend the two lines bolow if you want to run the command for virtual users' testing or uncomment them to run in the backend.
     #print_results(daily_plans, daily_targets, weekly_plans, weekly_targets, daily_gen.NUTRITION_WEIGHTS)
-    #return best_plan # Commend this line if you want to run the command for virtual users' testing.
+    return best_plan # Commend this line if you want to run the command for virtual users' testing.
 
     return get_best_meal(
         user_settings['a/a'],
@@ -293,7 +293,7 @@ class BaseFunctions:
         breakfast = [m for m in meals if m['Type'] == "Breakfast"]
         snack = [m for m in meals if m['Type'] == "Snack"]
         lunch = [m for m in meals if m['Type'] == "Lunch"]
-        dinner = [m for m in meals if m['Type'] in ["Dinner", "Evening Meal"]]
+        dinner = [m for m in meals if m['Type'] in ["Dinner"]]
 
         return [breakfast, snack, lunch, snack, dinner]
 
@@ -385,9 +385,9 @@ class DailyMealPlanGenerator(BaseFunctions):
 
     def process(self):
         meals = self._filtering()
-        #print("--->", len(meals))
+        print("--->", len(meals))
         meal_groups = self._get_five_meals(meals)
-        #print("--->", len(meal_groups[0]), len(meal_groups[1]), len(meal_groups[2]), len(meal_groups[3]), len(meal_groups[4]))
+        print("--->", len(meal_groups[0]), len(meal_groups[1]), len(meal_groups[2]), len(meal_groups[3]), len(meal_groups[4]))
         combos = self.generate_combinations(meal_groups)  # list of 100,000 tuples of 5 meals
         #print("--->", combos)
 
