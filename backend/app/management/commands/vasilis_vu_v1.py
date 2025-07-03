@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
     def _filtering(self, country):
         meals = Meal.objects.filter(Country__in=country).values_list(
-            "Type", "Total_Energy", "Total_Protein", "Total_Fat", "Total_Carbs",
+            "Type", "Total_Energy", "Total_Protein", "Total_Fat", "Total_Carbs", "id"
         )
 
         dtype = np.dtype([
@@ -33,6 +33,7 @@ class Command(BaseCommand):
             ('Total_Protein', 'f4'),
             ('Total_Fat', 'f4'),
             ('Total_Carbs', 'f4'),
+            ('id', 'i4'),
         ])
         return np.array(list(meals), dtype=dtype)
 
@@ -44,15 +45,9 @@ class Command(BaseCommand):
 
         return [breakfast, snack, lunch, snack, dinner]
 
-    def normal_distr(self):
-        # Set the mean and standard deviation for calories
-        mean = 1700
-        std = 1000/3
-
-        # Generate random calories for each user
-        calories = np.random.normal(loc=mean, scale=std, size=5000)
-
-        return calories
+    def normal_distr(self, mean, std):
+        # Generate and return random calories for each user based in normal distribution.
+        return np.random.normal(loc=mean, scale=std, size=5000)
 
     def _generate_combinations(self, meal_groups):
         group_lens = [len(group) for group in meal_groups]
@@ -133,7 +128,7 @@ class Command(BaseCommand):
 
     def batch_distance(self, score_matrix):
         # Vectorized weighted Euclidean distance
-        weights = np.array([self.NUTRITION_WEIGHTS.get(f, 0.0) for f in field_list], dtype=np.float32)
+        weights = np.array([NUTRITION_WEIGHTS.get(f, 0.0) for f in field_list], dtype=np.float32)
         weighted_squared = (score_matrix ** 2) * weights  # shape: (n_samples, n_fields)
         dnps = np.sqrt(np.sum(weighted_squared, axis=1))
         ndnps = dnps / (dnps + 1.0)
@@ -145,20 +140,21 @@ class Command(BaseCommand):
         # Format float printing, skip strings
         np.set_printoptions(suppress=True, formatter={'float_kind': lambda x: f'{x:.6f}'})
 
-        for country in [["Ireland"], ["Spain"], ["Hungary"]]:
+        sets = [ [["Ireland"], 1527.35, 295.50], [["Spain"], 2387.32, 326.63], [["Hungary"], 1625.09, 281.10] ]
+        for country, mean, std in sets:
             meals = self._filtering(country)
             #print(meals)
 
             meal_groups = self._get_five_meals(meals)
-            #print(meals[0], meals[1], meals[2], meals[3], meals[4])
+            if not all([len(meal_groups[0]), len(meal_groups[1]), len(meal_groups[2]), len(meal_groups[3]), len(meal_groups[4])]):
+                print(f'Error with meals for countr {country}')
+                continue
 
-            for user_kcal in self.normal_distr():
-                print(user_kcal)
-                quit()
+            for aa, user_kcal in enumerate(self.normal_distr(mean, std)):
                 combos = self._generate_combinations(meal_groups)
                 #print(len(combos))
                 #print(combos[0])
-
+                #quit()
                 daily_totals, field_list = self.batch_calculate_nutrition(combos)
                 #print(daily_totals)
                 #print(field_list)
@@ -166,9 +162,41 @@ class Command(BaseCommand):
                 score_matrix = self.batch_score(daily_totals, user_kcal)
                 dnps, ndnps = self.batch_distance(score_matrix)
 
-                print(score_matrix)
-                print(dnps)
-                print(ndnps)
+                top_k = 1000
+                top_indices = np.argsort(ndnps)[:top_k]
+                selected_indices = np.random.choice(top_indices, min(21, len(top_indices)), replace=False)
+
+                final_plans = []
+                for i in selected_indices:
+                    nutrition_dict = {field_list[j]: daily_totals[i, j] for j in range(len(field_list))}
+
+                    final_plans.append({
+                        "meal_ids": [combo_meal['id'] for combo_meal in combos[i]],
+                        "idx": i,
+                        "DNPS": dnps[i],
+                        "NDNPS": ndnps[i],
+                        "nutrition": nutrition_dict
+                    })
+
+                final_plans.sort(key=lambda x: x['NDNPS'])
+                print(f'Base: Total_Energy: {user_kcal}, Total_Protein: {(user_kcal*0.15/4, user_kcal*0.25/4)} Total_Fat: {(user_kcal*0.2/9, user_kcal*0.35/9)}, Total_Carbs: {(user_kcal*0.45/4, user_kcal*0.6/4)}')
+                print(final_plans[0])
+
+                combo_indices = self._weekly_combinations_indices()
+                weekly_totals = self._batch_weekly_nutrition(combo_indices)
+
+                # Filter by blv_s > 1
+                blv_idx = self.fields.index('blv_s')
+                valid_mask = weekly_totals[:, blv_idx] <= 1
+                weekly_totals = weekly_totals[valid_mask]
+                filtered_combo_indices = [combo_indices[i] for i, keep in enumerate(valid_mask) if keep]
+
+                # Score
+                score_matrix = self.batch_score(weekly_totals)
+                dnps, ndnps = self.batch_distance(score_matrix)
+
+                # Sort & return top
+                return self._assemble_plans(filtered_combo_indices, weekly_totals, dnps, ndnps)
 
                 quit()
 
