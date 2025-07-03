@@ -80,7 +80,7 @@ def register(request):
 
         email_context = {
             'username': user.username,
-            'activation_link': f'http://195.251.117.84:4000/pages/activation/accountActivationPage/{token}',
+            'activation_link': f'https://www.planeat-app.ovh/pages/activation/accountActivationPage/{token}',
             'support_email': 'planeat_project@iti.gr',  # Replace with your support email
         }
         email_body = render_to_string('../templates/activationEmail.html', email_context)
@@ -177,7 +177,7 @@ def reset_password_email(request, email):
 
             email_context = {
                 'username': user.username,
-                'resetpassword_link': f'http://195.251.117.84:4000/pages/password/resetPasswordPage/{token}',
+                'resetpassword_link': f'https://www.planeat-app.ovh/pages/password/resetPasswordPage/{token}',
                 #'resetpassword_link': f'http://195.251.117.84:4000/resetpassword/{token}',
                 'support_email': 'planeat_project@iti.gr',  # Replace with your support email
             }
@@ -244,7 +244,7 @@ def activation_email(request, email):
 
             email_context = {
                 'username': user.username,
-                'activation_link': f'http://195.251.117.84:4000/pages/activation/accountActivationPage/{token}',
+                'activation_link': f'https://www.planeat-app.ovh/pages/activation/accountActivationPage/{token}',
                 'support_email': 'planeat_project@iti.gr',  # Replace with your support email
             }
             email_body = render_to_string('../templates/activationEmail.html', email_context)
