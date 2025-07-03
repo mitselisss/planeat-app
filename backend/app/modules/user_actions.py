@@ -170,9 +170,6 @@ def add_eaten_meal(user, action, start_date, day):
     count_add_meals = UserActionAchievements.objects.filter(user=user, action=action, reason="check_meal").count()
     count_remove_meals = UserActionAchievements.objects.filter(user=user, action="remove_eaten_meal", reason="uncheck_meal").count()
     meals = count_add_meals - count_remove_meals
-    print(count_add_meals)
-    print(count_remove_meals)
-    print(meals)
 
     # MEAL BADGE 1
     if "meal_suggestions/first_bite" not in user_achievements.badges and meals >= 1:
@@ -197,19 +194,19 @@ def add_eaten_meal(user, action, start_date, day):
     meals_weekly = count_weekly_meals_added - count_weekly_meals_removed
 
     # MEAL ADVANCED BADGE 1
-    if "meal_suggestions_advanced/week_one_warrior" not in user_achievements.badges and meals_weekly >= 30:
+    if "meal_suggestions_advanced/week_one_warrior" not in user_achievements.badges and meals_weekly >= 20:
         user_achievements.badges.append("meal_suggestions_advanced/week_one_warrior")
         user_achievements.save()
         messages.append("You're a Week One Warrior! Badge unlocked! 🏆")
 
     # MEAL ADVANCED BADGE 2
-    if "meal_suggestions_advanced/double_week_devotee" not in user_achievements.badges and meals_weekly >= 60:
+    if "meal_suggestions_advanced/double_week_devotee" not in user_achievements.badges and meals_weekly >= 40:
         user_achievements.badges.append("meal_suggestions_advanced/double_week_devotee")
         user_achievements.save()
         messages.append("Double Week Devotee badge earned! Keep it up! 🔥")
 
     # MEAL ADVANCED BADGE 3
-    if "meal_suggestions_advanced/four_week_champion" not in user_achievements.badges and meals_weekly >= 120:
+    if "meal_suggestions_advanced/four_week_champion" not in user_achievements.badges and meals_weekly >= 80:
         user_achievements.badges.append("meal_suggestions_advanced/four_week_champion")
         user_achievements.save()
         messages.append("Four Week Champion! You're unstoppable! 🏅")
@@ -251,9 +248,6 @@ def remove_eaten_meal(user, action, start_date, day):
     count_add_meals = UserActionAchievements.objects.filter(user=user, action="add_eaten_meal", reason="check_meal").count()
     count_remove_meals = UserActionAchievements.objects.filter(user=user, action=action, reason="uncheck_meal").count()
     meals = count_add_meals - count_remove_meals
-    print(count_add_meals)
-    print(count_remove_meals)
-    print(meals)
 
     # MEAL BADGE 1
     if "meal_suggestions/first_bite" in user_achievements.badges and meals < 1:
@@ -282,19 +276,19 @@ def remove_eaten_meal(user, action, start_date, day):
     meals_weekly = count_weekly_meals_added - count_weekly_meals_removed
 
     # MEAL ADVANCED BADGE 1
-    if "meal_suggestions_advanced/week_one_warrior" in user_achievements.badges and meals_weekly < 30:
+    if "meal_suggestions_advanced/week_one_warrior" in user_achievements.badges and meals_weekly < 20:
         user_achievements.badges.remove("meal_suggestions_advanced/week_one_warrior")
         user_achievements.save()
         messages.append("Badge removed: Week One Warrior 🏆")
 
     # MEAL ADVANCED BADGE 2
-    if "meal_suggestions_advanced/double_week_devotee" in user_achievements.badges and meals_weekly < 60:
+    if "meal_suggestions_advanced/double_week_devotee" in user_achievements.badges and meals_weekly < 40:
         user_achievements.badges.remove("meal_suggestions_advanced/double_week_devotee")
         user_achievements.save()
         messages.append("Badge removed: Double Week Devotee 🔥")
 
     # MEAL ADVANCED BADGE 3
-    if "meal_suggestions_advanced/four_week_champion" in user_achievements.badges and meals_weekly < 120:
+    if "meal_suggestions_advanced/four_week_champion" in user_achievements.badges and meals_weekly < 80:
         user_achievements.badges.remove("meal_suggestions_advanced/four_week_champion")
         user_achievements.save()
         messages.append("Badge removed: Four Week Champion 🏅")
