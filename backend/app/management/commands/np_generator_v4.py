@@ -61,7 +61,7 @@ def return_best_plan(user_settings):
 
     # Commend the two lines bolow if you want to run the command for virtual users' testing or uncomment them to run in the backend.
     #print_results(daily_plans, daily_targets, weekly_plans, weekly_targets, daily_gen.NUTRITION_WEIGHTS)
-    #return best_plan # Commend this line if you want to run the command for virtual users' testing.
+    return best_plan # Commend this line if you want to run the command for virtual users' testing.
 
     return get_best_meal(
         user_settings['a/a'],
